@@ -26,7 +26,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.asm0dey.m4bconverter.ConverterMain</mainClass>
+                            <mainClass>com.github.asm0dey.m4bconverter.cli.ConverterMain</mainClass>
                         </manifest>
                         <manifestEntries>
                             <mode>development</mode>
@@ -44,7 +44,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.asm0dey.m4bconverter.ConverterMain</mainClass>
+                            <mainClass>com.github.asm0dey.m4bconverter.cli.ConverterMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -69,11 +69,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.java.dev.glazedlists</groupId>
-            <artifactId>glazedlists_java15</artifactId>
-            <version>1.9.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.1</version>
@@ -92,6 +87,17 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>15.0</version>
+        </dependency>
+        <!-- Mig Layout -->
+        <dependency>
+            <groupId>com.miglayout</groupId>
+            <artifactId>miglayout-swing</artifactId>
+            <version>4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.glazedlists</groupId>
+            <artifactId>glazedlists_java15</artifactId>
+            <version>1.9.0</version>
         </dependency>
     </dependencies>
 </project>

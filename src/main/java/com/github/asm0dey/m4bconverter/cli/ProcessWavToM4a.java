@@ -1,4 +1,4 @@
-package com.github.asm0dey.m4bconverter;
+package com.github.asm0dey.m4bconverter.cli;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;

@@ -1,4 +1,4 @@
-package com.github.asm0dey.m4bconverter;
+package com.github.asm0dey.m4bconverter.cli;
 
 import java.io.File;
 
