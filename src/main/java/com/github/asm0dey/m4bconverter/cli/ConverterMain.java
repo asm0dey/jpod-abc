@@ -45,23 +45,27 @@ public class ConverterMain {
 			}
 		});
 		Arrays.sort(listFiles);
-		ExecutorService mp3ToWavThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2,
-				Executors.privilegedThreadFactory());
-		final String sign = RandomStringUtils.randomAlphanumeric(10);
-		int i = 0;
-		printProgBar(0, "");
-		final TreeSet<File> toMerge = new TreeSet<>();
-		final int allBatchTasksCount = listFiles.length;
-		for (final File file : listFiles)
-			mp3ToWavThreadPool.submit(new ConversionQueue(file, ++i, sign, allBatchTasksCount, toMerge));
-		mp3ToWavThreadPool.shutdown();
-		// while (!mp3ToWavThreadPool.isTerminated()){}
-		mp3ToWavThreadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-		File merge = new M4aMerger().merge(from(toMerge));
-		System.out.println("merge = " + merge);
+        generateBook(Runtime.getRuntime().availableProcessors() / 2, listFiles);
 	}
 
-	private static void convertMP3ToWav(File input, File output) {
+    public static void generateBook(int threadsNumber, File... listFiles) throws InterruptedException {
+        ExecutorService mp3ToWavThreadPool = Executors.newFixedThreadPool(threadsNumber,
+                Executors.privilegedThreadFactory());
+        final String sign = RandomStringUtils.randomAlphanumeric(10);
+        int i = 0;
+        printProgBar(0, "");
+        final TreeSet<File> toMerge = new TreeSet<>();
+        final int allBatchTasksCount = listFiles.length;
+        for (final File file : listFiles)
+            mp3ToWavThreadPool.submit(new ConversionQueue(file, ++i, sign, allBatchTasksCount, toMerge));
+        mp3ToWavThreadPool.shutdown();
+        // while (!mp3ToWavThreadPool.isTerminated()){}
+        mp3ToWavThreadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
+        File merge = new M4aMerger().merge(from(toMerge));
+        System.out.println("merge = " + merge);
+    }
+
+    private static void convertMP3ToWav(File input, File output) {
 		new LameMp3ToWavDecoder().decode(input, output);
 	}
 

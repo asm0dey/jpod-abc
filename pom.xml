@@ -9,6 +9,16 @@
 
     <name>m4bconverter</name>
     <url>http://maven.apache.org</url>
+    <repositories>
+        <repository>
+            <id>jspresso</id>
+            <url>http://repository.jspresso.org/maven2</url>
+        </repository>
+        <repository>
+            <id>swt</id>
+            <url>https://swt-repo.googlecode.com/svn/repo/</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
@@ -26,7 +36,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.asm0dey.m4bconverter.cli.ConverterMain</mainClass>
+                            <mainClass>com.github.asm0dey.m4bconverter.gui.GuiMain</mainClass>
                         </manifest>
                         <manifestEntries>
                             <mode>development</mode>
@@ -44,7 +54,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.asm0dey.m4bconverter.cli.ConverterMain</mainClass>
+                            <mainClass>com.github.asm0dey.m4bconverter.gui.GuiMain</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -99,5 +109,92 @@
             <artifactId>glazedlists_java15</artifactId>
             <version>1.9.0</version>
         </dependency>
+        <!-- DJ Native Swing -->
+        <dependency>
+            <groupId>chrriis</groupId>
+            <artifactId>dj-nativeswing</artifactId>
+            <version>1.0.2.20120308</version>
+        </dependency>
+        <!-- SWT -->
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.${swt.name}.${swt.arch}</artifactId>
+            <version>3.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+        <!-- ID3 -->
+        <dependency>
+            <groupId>com.mpatric</groupId>
+            <artifactId>mp3agic</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>52.1</version>
+        </dependency>
+-->
     </dependencies>
+    <profiles>
+        <profile>
+            <id>x86</id>
+            <activation>
+                <os>
+                    <arch>i386</arch>
+                </os>
+            </activation>
+            <properties>
+                <swt.arch>x86</swt.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>64</id>
+            <activation>
+                <os>
+                    <arch>amd64</arch>
+                </os>
+            </activation>
+            <properties>
+                <swt.arch>x86_64</swt.arch>
+            </properties>
+        </profile>
+        <profile>
+            <id>win</id>
+            <activation>
+                <os>
+                    <name>windows</name>
+                </os>
+            </activation>
+            <properties>
+                <swt.name>win32.win32</swt.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>lin</id>
+            <activation>
+                <os>
+                    <name>linux</name>
+                </os>
+            </activation>
+            <properties>
+                <swt.name>gtk.linux</swt.name>
+            </properties>
+        </profile>
+        <profile>
+            <id>mac</id>
+            <activation>
+                <os>
+                    <name>macosx</name>
+                </os>
+            </activation>
+            <properties>
+                <swt.name>cocoa.macosx</swt.name>
+            </properties>
+        </profile>
+    </profiles>
 </project>
