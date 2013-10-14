@@ -61,8 +61,8 @@ public class ConverterMain {
         mp3ToWavThreadPool.shutdown();
         // while (!mp3ToWavThreadPool.isTerminated()){}
         mp3ToWavThreadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.DAYS);
-        File merge = new M4aMerger().merge(from(toMerge));
-        System.out.println("merge = " + merge);
+        File merge = new M4aMerger().merge(toMerge);
+        System.out.println(merge);
     }
 
     private static void convertMP3ToWav(File input, File output) {
