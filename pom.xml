@@ -143,6 +143,12 @@
             <artifactId>glazedlists_java15</artifactId>
             <version>1.9.0</version>
         </dependency>
+        <!--swingx-->
+        <dependency>
+            <groupId>org.swinglabs.swingx</groupId>
+            <artifactId>swingx-core</artifactId>
+            <version>1.6.5-1</version>
+        </dependency>
         <!-- DJ Native Swing -->
         <dependency>
             <groupId>chrriis</groupId>
