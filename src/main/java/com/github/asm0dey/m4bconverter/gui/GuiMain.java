@@ -10,6 +10,7 @@ import ca.odell.glazedlists.swing.EventJXTableModel;
 import ca.odell.glazedlists.swing.TableComparatorChooser;
 import chrriis.dj.nativeswing.swtimpl.NativeInterface;
 import chrriis.dj.nativeswing.swtimpl.components.JFileDialog;
+import com.github.asm0dey.m4bconverter.cli.ConverterMain;
 import com.github.asm0dey.m4bconverter.model.Track;
 import com.mpatric.mp3agic.InvalidDataException;
 import com.mpatric.mp3agic.Mp3File;
@@ -42,8 +43,8 @@ public class GuiMain {
 	private static final DecimalFormat twoNums = new DecimalFormat("00");
 	private static final DecimalFormat threeNums = new DecimalFormat("000");
 	private JFrame frame;
-	private EventList<Track> eventList = new BasicEventList<>();
-	private JLabel overallLength = new JLabel();
+	private final EventList<Track> eventList = new BasicEventList<>();
+	private final JLabel overallLength = new JLabel();
 	private long length = 0;
 	private DefaultEventSelectionModel<Track> selectionModel;
 
@@ -95,7 +96,18 @@ public class GuiMain {
 		JLabel title = new JLabel("JPod Audiobook converter");
 		contentPane.add(title, new CC().spanX(2));
 		contentPane.add(overallLength);
-		contentPane.add(new JButton("Run"));
+        JButton run = new JButton("Run");
+        run.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ConverterMain.generateBook(Runtime.getRuntime().availableProcessors()/2,eventList.toArray(new Track[eventList.size()]));
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+        contentPane.add(run);
 		TrackTableFormat format = new TrackTableFormat();
 		final DefaultEventTableModel<Track> model = new EventJXTableModel<>(trackSortedList, format);
 		final JXTable table = new JXTable(model);
@@ -218,7 +230,7 @@ public class GuiMain {
 				final long lengthInMillis = mp3File.getLengthInMilliseconds();
 				length += lengthInMillis;
 				updateLengthLabel();
-				eventList.add(new Track(getName(file.getAbsolutePath()), songTitle, lengthInMillis));
+				eventList.add(new Track(file, songTitle, lengthInMillis));
 			} catch (IOException | UnsupportedTagException | InvalidDataException e) {
 				e.printStackTrace();
 			}
@@ -235,7 +247,7 @@ public class GuiMain {
 		overallLength.setText(format);
 	}
 
-	public class TrackTableFormat implements WritableTableFormat<Track> {
+	private class TrackTableFormat implements WritableTableFormat<Track> {
 
 		@Override
 		public int getColumnCount() {

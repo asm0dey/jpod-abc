@@ -38,7 +38,7 @@ open class M4aMerger {
                 result = partition(result, partitionSize)?.mapTo(ArrayList<File>(), { mergePartition(it) })!!
             }
             var file = mergePartition(result)
-            var dest = File("${file.getParent()}${separator}book.m4a")
+            var dest = File("${file.getParent()}${separator}book.m4b")
             if (dest.exists())
                 dest.delete()
             file.renameTo(dest)
