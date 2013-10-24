@@ -39,11 +39,12 @@ public open class ConverterMain() {
                 var parentFile = source.getParentFile()
                 var resultingFileName = format("{0}_{1}.m4a", df.format((trackNumber).toLong()), sign)
                 var buffer = File.createTempFile("buffer", "")
-                ProcessBuilder(
+                val processBuilder = ProcessBuilder(
                         listOf(
                                 (if (SystemUtils.IS_OS_WINDOWS) "cmd" else "bash")
                                 , (if (SystemUtils.IS_OS_WINDOWS) "/c" else "-c")
-                                , "/usr/bin/lame --decode ${getBaseName(source.getAbsolutePath())}.mp3 -|neroAacEnc -if - -of ${resultingFileName}"))
+                                , "/usr/bin/lame --decode '${getBaseName(source.getAbsolutePath())}.mp3' -|neroAacEnc -if - -of ${resultingFileName}"))
+                processBuilder
                         .directory(parentFile)
                         .inheritIO()
                         .redirectError(buffer)

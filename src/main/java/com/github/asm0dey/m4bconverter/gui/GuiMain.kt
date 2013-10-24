@@ -6,7 +6,6 @@ import ca.odell.glazedlists.swing.DefaultEventSelectionModel
 import chrriis.dj.nativeswing.swtimpl.NativeInterface
 import chrriis.dj.nativeswing.swtimpl.components.JFileDialog
 import com.github.asm0dey.m4bconverter.model.Track
-import com.mpatric.mp3agic.Mp3File
 import java.io.File
 import java.text.DecimalFormat
 import java.util.ArrayList
@@ -22,7 +21,6 @@ import net.miginfocom.layout.LC
 import net.miginfocom.layout.AC
 import javax.swing.UIManager
 import net.miginfocom.layout.CC
-import javax.swing.JButton
 import com.github.asm0dey.m4bconverter.cli.ConverterMain
 import ca.odell.glazedlists.swing.EventJXTableModel
 import ca.odell.glazedlists.SortedList
@@ -31,6 +29,9 @@ import javax.swing.ListSelectionModel
 import javax.swing.JScrollPane
 import javax.swing.JSeparator
 import javax.swing.SwingConstants
+import org.apache.commons.io.FilenameUtils
+import org.jaudiotagger.audio.mp3.MP3File
+import org.jaudiotagger.audio.AudioFileIO
 
 public open class GuiMain() {
     private val eventList = BasicEventList<Track>()
@@ -52,9 +53,9 @@ public open class GuiMain() {
             }
             size = Pair(800, 600)
             setLayout(MigLayout(LC().wrapAfter(4), AC().grow((100).toFloat(), 0)?.align("c")))
-            add(JLabel("JPod: MP3 to M4B audiobook converter"),CC().spanX(2))
+            add(JLabel("JPod: MP3 to M4B audiobook converter"), CC().spanX(2))
             add(overallLength)
-            add(button("Run",{ConverterMain.generateBook(Runtime.getRuntime().availableProcessors() / 2, eventList) }))
+            add(button("Run", { ConverterMain.generateBook(Runtime.getRuntime().availableProcessors() / 2, eventList) }))
             var format = TrackTableFormat()
             var trackSortedList = SortedList<Track>(eventList)
             val model = EventJXTableModel<Track>(trackSortedList, format)
@@ -64,9 +65,9 @@ public open class GuiMain() {
             selectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION)
             var scrollPane = JScrollPane(table)
             add(scrollPane, CC().spanX(3)?.spanY(3)?.grow()?.width("100%"))
-            add(button("Up",{moveUp()}),CC().cell(3, 1))
-            add(button("Down",{moveDown()}),CC().cell(3,2))
-            add(button("Delete",{delete()}), CC().cell(3, 3)?.wrap())
+            add(button("Up", { moveUp() }), CC().cell(3, 1))
+            add(button("Down", { moveDown() }), CC().cell(3, 2))
+            add(button("Delete", { delete() }), CC().cell(3, 3)?.wrap())
 
         }
     }
@@ -111,7 +112,7 @@ public open class GuiMain() {
         var dialog = JFileDialog()
         dialog.setDialogType(JFileDialog.DialogType.OPEN_DIALOG_TYPE)
         dialog.setSelectionMode(JFileDialog.SelectionMode.MULTIPLE_SELECTION)
-        dialog.setExtensionFilters(array("*.mp3"), array("mp3 file"), 0)
+        dialog.setExtensionFilters(array("*.mp3"), array("mp3 files"), 0)
         dialog.show(mainFrame)
         var selectedFileNames = dialog.getSelectedFileNames()!!
         var parentDirectory = dialog.getParentDirectory()
@@ -126,12 +127,11 @@ public open class GuiMain() {
         var parent = File(parentDirectory)
         var files = selectedFileNames.map { File(parent, it) }.sortBy { it.getAbsolutePath() }
         for (file in files){
-            var mp3File = Mp3File(file.getAbsolutePath())
-            var songTitle = mp3File.getId3v2Tag()?.getTitle()
-            val lengthInMillis = mp3File.getLengthInMilliseconds()
-            length += lengthInMillis
+            val mp3File = AudioFileIO.read(file) as MP3File
+            val trackLength = mp3File.getAudioHeader()?.getTrackLength()?.toLong()?.times(1000)
+            length += trackLength!!
             updateLengthLabel()
-            eventList.add(Track(file, songTitle, lengthInMillis))
+            eventList.add(Track(file, mp3File.getID3v1Tag()?.getFirstTitle()?:FilenameUtils.getBaseName(file.getAbsolutePath())!!, trackLength))
         }
 
     }
