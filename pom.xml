@@ -54,7 +54,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.github.asm0dey.m4bconverter.gui.GuiMain</mainClass>
+                            <mainClass>com.github.asm0dey.m4bconverter.gui.GuiPackage</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -107,7 +107,7 @@
         </plugins>
     </build>
     <properties>
-        <kotlin.version>0.6.786</kotlin.version>
+        <kotlin.version>0.6.800</kotlin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -175,6 +175,11 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-swing</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <!--

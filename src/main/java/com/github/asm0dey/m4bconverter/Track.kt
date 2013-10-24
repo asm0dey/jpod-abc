@@ -9,7 +9,7 @@ import org.apache.commons.io.FilenameUtils
  * Date: 14.10.13
  * Time: 0:55
  */
-public data class Track(var file: File, var track: String, var length: Long) : Comparable<Track>, IKnowMyValues, ICanSetMyValues<Track>{
+public data class Track(var file: File, var track: String?, var length: Long) : Comparable<Track>, IKnowMyValues, ICanSetMyValues<Track>{
     override fun compareTo(other: Track) = file.compareTo(other.file)
     override fun setValue(value: Any?, column: Int): Track {
         if (getColumnsAndEditable().map { it.second }[column] == true )
